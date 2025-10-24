@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -46,12 +45,7 @@ export function RecommendationForm({
   formAction,
   isPending,
 }: RecommendationFormProps) {
-  const [location, setLocation] = useState("Paris, France");
-  const [availableTime, setAvailableTime] = useState("1 day");
-  const [transportationPreferences, setTransportationPreferences] = useState("Walking");
-  const [personalInterests, setPersonalInterests] = useState("Historic landmarks, art museums, and local cafes");
-  const [budgetLimit, setBudgetLimit] = useState("moderate");
-
+  
   return (
     <Card>
       <CardHeader>
@@ -67,8 +61,7 @@ export function RecommendationForm({
             <Input
               id="location"
               name="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              defaultValue="Paris, France"
               placeholder="e.g., New York City"
               required
             />
@@ -78,16 +71,15 @@ export function RecommendationForm({
             <Input
               id="availableTime"
               name="availableTime"
-              value={availableTime}
-              onChange={(e) => setAvailableTime(e.target.value)}
+              defaultValue="1 day"
               placeholder="e.g., 6 hours, half a day"
               required
             />
           </div>
           <div className="space-y-2">
-            <Label>Transportation</Label>
-             <Select name="transportationPreferences" onValueChange={setTransportationPreferences} value={transportationPreferences}>
-                <SelectTrigger>
+            <Label htmlFor="transportationPreferences">Transportation</Label>
+             <Select name="transportationPreferences" defaultValue="Walking">
+                <SelectTrigger id="transportationPreferences">
                   <SelectValue placeholder="Select a method" />
                 </SelectTrigger>
               <SelectContent>
@@ -103,8 +95,7 @@ export function RecommendationForm({
             <Textarea
               id="personalInterests"
               name="personalInterests"
-              value={personalInterests}
-              onChange={(e) => setPersonalInterests(e.target.value)}
+              defaultValue="Historic landmarks, art museums, and local cafes"
               placeholder="e.g., art, nature, history, coffee shops..."
               className="resize-none"
               required
@@ -112,9 +103,9 @@ export function RecommendationForm({
             />
           </div>
           <div className="space-y-2">
-            <Label>Budget</Label>
-            <Select name="budgetLimit" onValueChange={setBudgetLimit} value={budgetLimit}>
-                <SelectTrigger>
+            <Label htmlFor="budgetLimit">Budget</Label>
+            <Select name="budgetLimit" defaultValue="moderate">
+                <SelectTrigger id="budgetLimit">
                   <SelectValue placeholder="Select your budget" />
                 </SelectTrigger>
               <SelectContent>

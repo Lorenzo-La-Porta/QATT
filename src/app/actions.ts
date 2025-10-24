@@ -1,12 +1,14 @@
 'use server';
 
 import { recommendAttractions } from '@/ai/flows/attraction-recommendations';
+import type { RecommendAttractionsInput } from '@/ai/flows/attraction-recommendations';
 import type { Attraction } from '@/lib/types';
 import { formSchema } from '@/lib/schema';
 
 export type FormState = {
   data?: Attraction[];
   error?: string;
+  formErrors?: { [key in keyof RecommendAttractionsInput]?: string[] };
 }
 
 export async function getAttractionRecommendations(
@@ -24,8 +26,12 @@ export async function getAttractionRecommendations(
   const validatedFields = formSchema.safeParse(rawData);
 
   if (!validatedFields.success) {
-    console.error('Validation Errors:', validatedFields.error.flatten().fieldErrors);
-    return { error: 'Invalid input. Please check the form fields.' };
+    const formErrors = validatedFields.error.flatten().fieldErrors;
+    console.error('Validation Errors:', formErrors);
+    return { 
+      error: 'Invalid input. Please check the form fields.',
+      formErrors,
+    };
   }
 
   try {

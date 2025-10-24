@@ -1,13 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Plus, Check, MapPin, Clock, Star } from "lucide-react";
+import { Plus, Check, Clock } from "lucide-react";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -72,7 +71,7 @@ export function AttractionCard({
           size="sm"
           className={cn(isAdded && "bg-green-600 hover:bg-green-700")}
         >
-          {isAdded ? <Check /> : <Plus />}
+          {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
           {isAdded ? "Added" : "Add to Plan"}
         </Button>
       </CardFooter>

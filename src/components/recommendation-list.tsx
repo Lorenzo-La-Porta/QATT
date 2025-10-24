@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 type RecommendationListProps = {
   recommendations?: Attraction[];
   onAddToItinerary: (attraction: Attraction) => void;
-  itinerary: Attraction[];
+  itineraryIds: Set<string>;
   isPending: boolean;
 };
 
@@ -36,7 +36,7 @@ function RecommendationSkeleton() {
 export function RecommendationList({
   recommendations,
   onAddToItinerary,
-  itinerary,
+  itineraryIds,
   isPending,
 }: RecommendationListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -121,7 +121,7 @@ export function RecommendationList({
             key={attraction.id}
             attraction={attraction}
             onAddToItinerary={onAddToItinerary}
-            isAdded={itinerary.some((item) => item.id === attraction.id)}
+            isAdded={itineraryIds.has(attraction.id)}
           />
         ))}
       </div>
