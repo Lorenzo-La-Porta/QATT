@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useEffect, useState } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 
 import { getAttractionRecommendations } from "@/app/actions";
-import { formSchema } from "@/lib/schema";
 import type { Attraction } from "@/lib/types";
 
 import { Button } from "@/components/ui/button";
@@ -50,14 +49,16 @@ function SubmitButton() {
   );
 }
 
+const initialState = {
+  data: [],
+};
+
 export function RecommendationForm({
   setIsLoading,
   setRecommendations,
 }: RecommendationFormProps) {
   const { toast } = useToast();
-  const [state, formAction] = useActionState(getAttractionRecommendations, {
-    data: [],
-  });
+  const [state, formAction] = useFormState(getAttractionRecommendations, initialState);
   
   const [location, setLocation] = useState("Paris, France");
   const [availableTime, setAvailableTime] = useState("1 day");
@@ -73,7 +74,7 @@ export function RecommendationForm({
   }, [pending, setIsLoading]);
 
   useEffect(() => {
-    if (state?.data) {
+    if (state?.data && state.data.length > 0) {
       setRecommendations(state.data);
     }
     if (state?.error) {
