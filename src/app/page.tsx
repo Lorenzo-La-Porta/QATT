@@ -1,24 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState } from "react";
 import { Header } from "@/components/header";
 import { RecommendationForm } from "@/components/recommendation-form";
 import { RecommendationList } from "@/components/recommendation-list";
 import { ItineraryPanel } from "@/components/itinerary-panel";
 import type { Attraction } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
+import { getAttractionRecommendations, type FormState } from "@/app/actions";
+import { useState } from "react";
+
+const initialState: FormState = {
+  data: undefined,
+  error: undefined,
+};
 
 export default function Home() {
-  const [recommendations, setRecommendations] = useState<Attraction[]>([]);
+  const [state, formAction] = useActionState(getAttractionRecommendations, initialState);
   const [itinerary, setItinerary] = useState<Attraction[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isInitialState, setIsInitialState] = useState(true);
   const { toast } = useToast();
 
-  const handleSetRecommendations = (newRecommendations: Attraction[]) => {
-    setRecommendations(newRecommendations);
-    setIsInitialState(false);
-  };
 
   const handleAddToItinerary = (attraction: Attraction) => {
     if (!itinerary.find((item) => item.id === attraction.id)) {
@@ -49,10 +50,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-12">
           <aside className="lg:col-span-1 space-y-8">
             <div className="lg:sticky lg:top-8 space-y-8">
-              <RecommendationForm
-                setIsLoading={setIsLoading}
-                setRecommendations={handleSetRecommendations}
-              />
+              <RecommendationForm formAction={formAction} error={state?.error} />
               <ItineraryPanel
                 itinerary={itinerary}
                 onRemoveFromItinerary={handleRemoveFromItinerary}
@@ -61,9 +59,7 @@ export default function Home() {
           </aside>
           <section className="lg:col-span-2 mt-8 lg:mt-0">
             <RecommendationList
-              isLoading={isLoading}
-              isInitialState={isInitialState}
-              recommendations={recommendations}
+              recommendations={state?.data}
               onAddToItinerary={handleAddToItinerary}
               itinerary={itinerary}
             />

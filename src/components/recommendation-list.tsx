@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useFormStatus } from "react-dom";
 import { Compass, SearchX } from "lucide-react";
 import { AttractionCard } from "./attraction-card";
 import type { Attraction } from "@/lib/types";
@@ -9,9 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 type RecommendationListProps = {
-  recommendations: Attraction[];
-  isLoading: boolean;
-  isInitialState: boolean;
+  recommendations?: Attraction[];
   onAddToItinerary: (attraction: Attraction) => void;
   itinerary: Attraction[];
 };
@@ -36,30 +35,31 @@ function RecommendationSkeleton() {
 
 export function RecommendationList({
   recommendations,
-  isLoading,
-  isInitialState,
   onAddToItinerary,
   itinerary,
 }: RecommendationListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { pending } = useFormStatus();
 
   const categories = useMemo(() => {
+    if (!recommendations) return [];
     const allCategories = recommendations.map((rec) => rec.category);
     return [...new Set(allCategories)];
   }, [recommendations]);
 
   const filteredRecommendations = useMemo(() => {
+    if (!recommendations) return [];
     if (!selectedCategory) return recommendations;
     return recommendations.filter(
       (rec) => rec.category === selectedCategory
     );
   }, [recommendations, selectedCategory]);
 
-  if (isLoading) {
+  if (pending) {
     return <RecommendationSkeleton />;
   }
 
-  if (isInitialState) {
+  if (!recommendations) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground p-8 border-2 border-dashed rounded-lg">
         <Compass className="w-16 h-16 mb-4 text-primary/50" />
@@ -74,7 +74,7 @@ export function RecommendationList({
     );
   }
 
-  if (recommendations.length === 0 && !isLoading) {
+  if (recommendations.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground p-8 border-2 border-dashed rounded-lg">
         <SearchX className="w-16 h-16 mb-4 text-destructive/50" />

@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, useActionState } from "react";
+import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
-import { getAttractionRecommendations } from "@/app/actions";
 import type { Attraction } from "@/lib/types";
 
 import { Button } from "@/components/ui/button";
@@ -29,8 +28,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Spinner } from "@/components/icons";
 
 type RecommendationFormProps = {
-  setIsLoading: (isLoading: boolean) => void;
-  setRecommendations: (recommendations: Attraction[]) => void;
+  formAction: (payload: FormData) => void;
+  error?: string;
 };
 
 function SubmitButton() {
@@ -49,16 +48,11 @@ function SubmitButton() {
   );
 }
 
-const initialState = {
-  data: [],
-};
-
 export function RecommendationForm({
-  setIsLoading,
-  setRecommendations,
+  formAction,
+  error,
 }: RecommendationFormProps) {
   const { toast } = useToast();
-  const [state, formAction] = useActionState(getAttractionRecommendations, initialState);
   
   const [location, setLocation] = useState("Paris, France");
   const [availableTime, setAvailableTime] = useState("1 day");
@@ -66,25 +60,15 @@ export function RecommendationForm({
   const [personalInterests, setPersonalInterests] = useState("Historic landmarks, art museums, and local cafes");
   const [budgetLimit, setBudgetLimit] = useState("moderate");
 
-
-  const { pending } = useFormStatus();
-
   useEffect(() => {
-    setIsLoading(pending);
-  }, [pending, setIsLoading]);
-
-  useEffect(() => {
-    if (state?.data && state.data.length > 0) {
-      setRecommendations(state.data);
-    }
-    if (state?.error) {
+    if (error) {
       toast({
         variant: "destructive",
         title: "Oh no! Something went wrong.",
-        description: state.error,
+        description: error,
       });
     }
-  }, [state, setRecommendations, toast]);
+  }, [error, toast]);
 
   return (
     <Card>
