@@ -1,7 +1,6 @@
 'use server';
 
 import { recommendAttractions } from '@/ai/flows/attraction-recommendations';
-import { nanoid } from 'nanoid';
 import type { Attraction } from '@/lib/types';
 import { formSchema } from '@/lib/schema';
 
@@ -33,7 +32,7 @@ export async function getAttractionRecommendations(
     const result = await recommendAttractions(validatedFields.data);
     const recommendationsWithIds = result.attractionRecommendations.map((rec) => ({
       ...rec,
-      id: nanoid(),
+      id: crypto.randomUUID(),
     }));
     return { data: recommendationsWithIds };
   } catch (error) {
