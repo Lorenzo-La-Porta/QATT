@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -66,7 +66,7 @@ export function RecommendationForm({
   setRecommendations,
 }: RecommendationFormProps) {
   const { toast } = useToast();
-  const [state, formAction] = useFormState(getAttractionRecommendations, {
+  const [state, formAction] = useActionState(getAttractionRecommendations, {
     data: [],
   });
 
