@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useFormStatus } from "react-dom";
 import { Compass, SearchX } from "lucide-react";
 import { AttractionCard } from "./attraction-card";
 import type { Attraction } from "@/lib/types";
@@ -13,6 +12,7 @@ type RecommendationListProps = {
   recommendations?: Attraction[];
   onAddToItinerary: (attraction: Attraction) => void;
   itinerary: Attraction[];
+  isPending: boolean;
 };
 
 function RecommendationSkeleton() {
@@ -37,9 +37,9 @@ export function RecommendationList({
   recommendations,
   onAddToItinerary,
   itinerary,
+  isPending,
 }: RecommendationListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const { pending } = useFormStatus();
 
   const categories = useMemo(() => {
     if (!recommendations) return [];
@@ -55,7 +55,7 @@ export function RecommendationList({
     );
   }, [recommendations, selectedCategory]);
 
-  if (pending) {
+  if (isPending) {
     return <RecommendationSkeleton />;
   }
 

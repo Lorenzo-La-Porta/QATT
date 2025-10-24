@@ -17,6 +17,7 @@ export async function getAttractionRecommendations(
   const validatedFields = formSchema.safeParse(Object.fromEntries(formData));
 
   if (!validatedFields.success) {
+    console.error('Validation Errors:', validatedFields.error.flatten().fieldErrors);
     return { error: 'Invalid input. Please check the form fields.' };
   }
 

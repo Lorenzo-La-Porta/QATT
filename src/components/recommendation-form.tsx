@@ -1,10 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useFormStatus } from "react-dom";
-
-import type { Attraction } from "@/lib/types";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,19 +20,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 import { Spinner } from "@/components/icons";
 
 type RecommendationFormProps = {
   formAction: (payload: FormData) => void;
-  error?: string;
+  isPending: boolean;
 };
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+function SubmitButton({ isPending }: { isPending: boolean }) {
   return (
-    <Button type="submit" disabled={pending} className="w-full">
-      {pending ? (
+    <Button type="submit" disabled={isPending} className="w-full">
+      {isPending ? (
         <>
           <Spinner className="mr-2 h-4 w-4" />
           Generating...
@@ -50,25 +44,13 @@ function SubmitButton() {
 
 export function RecommendationForm({
   formAction,
-  error,
+  isPending,
 }: RecommendationFormProps) {
-  const { toast } = useToast();
-  
   const [location, setLocation] = useState("Paris, France");
   const [availableTime, setAvailableTime] = useState("1 day");
   const [transportationPreferences, setTransportationPreferences] = useState("Walking");
   const [personalInterests, setPersonalInterests] = useState("Historic landmarks, art museums, and local cafes");
   const [budgetLimit, setBudgetLimit] = useState("moderate");
-
-  useEffect(() => {
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Oh no! Something went wrong.",
-        description: error,
-      });
-    }
-  }, [error, toast]);
 
   return (
     <Card>
@@ -88,6 +70,7 @@ export function RecommendationForm({
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g., New York City"
+              required
             />
           </div>
           <div className="space-y-2">
@@ -98,6 +81,7 @@ export function RecommendationForm({
               value={availableTime}
               onChange={(e) => setAvailableTime(e.target.value)}
               placeholder="e.g., 6 hours, half a day"
+              required
             />
           </div>
           <div className="space-y-2">
@@ -123,6 +107,8 @@ export function RecommendationForm({
               onChange={(e) => setPersonalInterests(e.target.value)}
               placeholder="e.g., art, nature, history, coffee shops..."
               className="resize-none"
+              required
+              minLength={10}
             />
           </div>
           <div className="space-y-2">
@@ -141,7 +127,7 @@ export function RecommendationForm({
           </div>
         </CardContent>
         <CardFooter>
-          <SubmitButton />
+          <SubmitButton isPending={isPending} />
         </CardFooter>
       </form>
     </Card>

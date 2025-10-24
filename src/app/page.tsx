@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { Header } from "@/components/header";
 import { RecommendationForm } from "@/components/recommendation-form";
 import { RecommendationList } from "@/components/recommendation-list";
@@ -15,9 +15,19 @@ const initialState: FormState = {
 };
 
 export default function Home() {
-  const [state, formAction] = useActionState(getAttractionRecommendations, initialState);
+  const [state, formAction, isPending] = useActionState(getAttractionRecommendations, initialState);
   const [itinerary, setItinerary] = useState<Attraction[]>([]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (state.error) {
+      toast({
+        variant: "destructive",
+        title: "Oh no! Something went wrong.",
+        description: state.error,
+      });
+    }
+  }, [state.error, toast]);
 
 
   const handleAddToItinerary = (attraction: Attraction) => {
@@ -49,7 +59,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-12">
           <aside className="lg:col-span-1 space-y-8">
             <div className="lg:sticky lg:top-8 space-y-8">
-              <RecommendationForm formAction={formAction} error={state?.error} />
+              <RecommendationForm formAction={formAction} isPending={isPending} />
               <ItineraryPanel
                 itinerary={itinerary}
                 onRemoveFromItinerary={handleRemoveFromItinerary}
@@ -61,6 +71,7 @@ export default function Home() {
               recommendations={state?.data}
               onAddToItinerary={handleAddToItinerary}
               itinerary={itinerary}
+              isPending={isPending}
             />
           </section>
         </div>
