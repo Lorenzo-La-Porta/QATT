@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useState, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { getAttractionRecommendations } from "@/app/actions";
 import type { Attraction } from "@/lib/types";
@@ -58,7 +58,7 @@ export function RecommendationForm({
   setRecommendations,
 }: RecommendationFormProps) {
   const { toast } = useToast();
-  const [state, formAction] = useFormState(getAttractionRecommendations, initialState);
+  const [state, formAction] = useActionState(getAttractionRecommendations, initialState);
   
   const [location, setLocation] = useState("Paris, France");
   const [availableTime, setAvailableTime] = useState("1 day");
