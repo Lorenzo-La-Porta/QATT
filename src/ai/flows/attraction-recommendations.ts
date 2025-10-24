@@ -49,7 +49,7 @@ const prompt = ai.definePrompt({
   Available Time: {{{availableTime}}}
   Transportation Preferences: {{{transportationPreferences}}}
   Personal Interests: {{{personalInterests}}}
-  Budget Limit: {{{budgetLimit}}}
+  {{#if budgetLimit}}Budget Limit: {{{budgetLimit}}}{{/if}}
 
   Return a JSON array of attractions, with each attraction including name, description, category, estimatedVisitTime, and approximateCost (if applicable).  Make sure the JSON is valid and each field is well populated and formatted.
   `,

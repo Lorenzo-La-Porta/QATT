@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Header } from "@/components/header";
 import { RecommendationForm } from "@/components/recommendation-form";
 import { RecommendationList } from "@/components/recommendation-list";
@@ -8,7 +8,6 @@ import { ItineraryPanel } from "@/components/itinerary-panel";
 import type { Attraction } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { getAttractionRecommendations, type FormState } from "@/app/actions";
-import { useState } from "react";
 
 const initialState: FormState = {
   data: undefined,
