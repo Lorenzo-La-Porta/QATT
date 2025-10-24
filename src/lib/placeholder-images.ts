@@ -7,4 +7,11 @@ export type ImagePlaceholder = {
   imageHint: string;
 };
 
-export const PlaceHolderImages: ImagePlaceholder[] = data.placeholderImages;
+export const placeholderImages: ImagePlaceholder[] = data.placeholderImages;
+
+const imageMap = new Map(placeholderImages.map(img => [img.id, img]));
+
+export const getPlaceholderImage = (category: string): ImagePlaceholder => {
+  const categoryId = category.toLowerCase().split(' ')[0];
+  return imageMap.get(categoryId) || imageMap.get('default')!;
+};
