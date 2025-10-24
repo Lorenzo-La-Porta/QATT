@@ -14,7 +14,15 @@ export async function getAttractionRecommendations(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  const validatedFields = formSchema.safeParse(Object.fromEntries(formData));
+  const rawData = {
+    location: formData.get('location'),
+    availableTime: formData.get('availableTime'),
+    transportationPreferences: formData.get('transportationPreferences'),
+    personalInterests: formData.get('personalInterests'),
+    budgetLimit: formData.get('budgetLimit'),
+  };
+
+  const validatedFields = formSchema.safeParse(rawData);
 
   if (!validatedFields.success) {
     console.error('Validation Errors:', validatedFields.error.flatten().fieldErrors);

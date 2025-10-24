@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { Header } from "@/components/header";
 import { RecommendationForm } from "@/components/recommendation-form";
 import { RecommendationList } from "@/components/recommendation-list";
@@ -16,7 +16,6 @@ const initialState: FormState = {
 
 export default function Home() {
   const [state, formAction, isPending] = useActionState(getAttractionRecommendations, initialState);
-  const [itinerary, setItinerary] = useState<Attraction[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -31,25 +30,12 @@ export default function Home() {
 
 
   const handleAddToItinerary = (attraction: Attraction) => {
-    if (!itinerary.find((item) => item.id === attraction.id)) {
-      setItinerary([...itinerary, attraction]);
-      toast({
-        title: "Added to Itinerary",
-        description: `${attraction.name} has been added to your plan.`,
-      });
-    }
-  };
-
-  const handleRemoveFromItinerary = (attractionId: string) => {
-    const removedAttraction = itinerary.find(item => item.id === attractionId);
-    if(removedAttraction) {
-      setItinerary(itinerary.filter((item) => item.id !== attractionId));
-      toast({
-        title: "Removed from Itinerary",
-        description: `${removedAttraction.name} has been removed from your plan.`,
-        variant: "destructive",
-      });
-    }
+    // This part of the UI is not implemented yet.
+    // In a real application, you would manage the itinerary state here.
+    toast({
+      title: "Coming Soon!",
+      description: "Itinerary functionality will be implemented in a future step.",
+    });
   };
 
   return (
@@ -61,8 +47,8 @@ export default function Home() {
             <div className="lg:sticky lg:top-8 space-y-8">
               <RecommendationForm formAction={formAction} isPending={isPending} />
               <ItineraryPanel
-                itinerary={itinerary}
-                onRemoveFromItinerary={handleRemoveFromItinerary}
+                itinerary={[]}
+                onRemoveFromItinerary={() => {}}
               />
             </div>
           </aside>
@@ -70,7 +56,7 @@ export default function Home() {
             <RecommendationList
               recommendations={state?.data}
               onAddToItinerary={handleAddToItinerary}
-              itinerary={itinerary}
+              itinerary={[]}
               isPending={isPending}
             />
           </section>
